@@ -1410,9 +1410,21 @@ pub fn schema_for(type_uri: &str) -> Option<&'static str> {
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/app-state/put-many/1.0#response" => <crate::specs::vta::app_state::put_many::v1_0::Response as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/attestation/config-report/0.1" => <crate::specs::vta::attestation::config_report::v0_1::Payload as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/attestation/config-report/0.1#response" => <crate::specs::vta::attestation::config_report::v0_1::Response as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/attestation/mnemonic-export/1.0" => <crate::specs::vta::attestation::mnemonic_export::v1_0::Payload as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/attestation/mnemonic-export/1.0#response" => <crate::specs::vta::attestation::mnemonic_export::v1_0::Response as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/attestation/report/0.1" => <crate::specs::vta::attestation::report::v0_1::Payload as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/attestation/report/0.1#response" => <crate::specs::vta::attestation::report::v0_1::Response as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/attestation/status/0.1" => <crate::specs::vta::attestation::status::v0_1::Payload as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/attestation/status/0.1#response" => <crate::specs::vta::attestation::status::v0_1::Response as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/backup/abort/1.0" => <crate::specs::vta::backup::abort::v1_0::Payload as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "vta")]
@@ -3823,11 +3835,25 @@ pub fn spec_policy_for(type_uri: &str) -> Option<crate::SpecPolicy> {
             crate::specs::vta::app_state::put_many::v1_0::Payload,
         >()),
         #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/attestation/config-report/0.1" => {
+            Some(crate::SpecPolicy::of::<
+                crate::specs::vta::attestation::config_report::v0_1::Payload,
+            >())
+        }
+        #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/attestation/mnemonic-export/1.0" => {
             Some(crate::SpecPolicy::of::<
                 crate::specs::vta::attestation::mnemonic_export::v1_0::Payload,
             >())
         }
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/attestation/report/0.1" => Some(crate::SpecPolicy::of::<
+            crate::specs::vta::attestation::report::v0_1::Payload,
+        >()),
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/attestation/status/0.1" => Some(crate::SpecPolicy::of::<
+            crate::specs::vta::attestation::status::v0_1::Payload,
+        >()),
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/backup/abort/1.0" => Some(crate::SpecPolicy::of::<
             crate::specs::vta::backup::abort::v1_0::Payload,
@@ -6210,8 +6236,20 @@ pub fn error_codes_for(type_uri: &str) -> Option<&'static [crate::DeclaredErrorC
             Some(crate::specs::vta::app_state::put_many::v1_0::ERROR_CODES)
         }
         #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/attestation/config-report/0.1" => {
+            Some(crate::specs::vta::attestation::config_report::v0_1::ERROR_CODES)
+        }
+        #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/attestation/mnemonic-export/1.0" => {
             Some(crate::specs::vta::attestation::mnemonic_export::v1_0::ERROR_CODES)
+        }
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/attestation/report/0.1" => {
+            Some(crate::specs::vta::attestation::report::v0_1::ERROR_CODES)
+        }
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/attestation/status/0.1" => {
+            Some(crate::specs::vta::attestation::status::v0_1::ERROR_CODES)
         }
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/backup/abort/1.0" => {
