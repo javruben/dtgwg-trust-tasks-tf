@@ -1658,6 +1658,10 @@ pub fn schema_for(type_uri: &str) -> Option<&'static str> {
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/services/list/1.0#response" => <crate::specs::vta::services::list::v1_0::Response as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/services/report/0.1" => <crate::specs::vta::services::report::v0_1::Payload as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/services/report/0.1#response" => <crate::specs::vta::services::report::v0_1::Response as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/services/rollback/1.0" => <crate::specs::vta::services::rollback::v1_0::Payload as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/services/rollback/1.0#response" => <crate::specs::vta::services::rollback::v1_0::Response as crate::Payload>::PAYLOAD_SCHEMA,
@@ -4143,6 +4147,10 @@ pub fn spec_policy_for(type_uri: &str) -> Option<crate::SpecPolicy> {
             crate::specs::vta::services::list::v1_0::Payload,
         >()),
         #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/services/report/0.1" => Some(crate::SpecPolicy::of::<
+            crate::specs::vta::services::report::v0_1::Payload,
+        >()),
+        #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/services/rollback/1.0" => Some(crate::SpecPolicy::of::<
             crate::specs::vta::services::rollback::v1_0::Payload,
         >()),
@@ -6482,6 +6490,10 @@ pub fn error_codes_for(type_uri: &str) -> Option<&'static [crate::DeclaredErrorC
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/services/list/1.0" => {
             Some(crate::specs::vta::services::list::v1_0::ERROR_CODES)
+        }
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/services/report/0.1" => {
+            Some(crate::specs::vta::services::report::v0_1::ERROR_CODES)
         }
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/services/rollback/1.0" => {
