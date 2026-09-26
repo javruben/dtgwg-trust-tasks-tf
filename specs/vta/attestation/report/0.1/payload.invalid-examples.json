@@ -1,0 +1,25 @@
+[
+  {
+    "note": "`nonce` is required: there is no nonce-less report.",
+    "payload": {}
+  },
+  {
+    "note": "`nonce` must be 32 bytes of lowercase hex.",
+    "payload": {
+      "nonce": "abc123"
+    }
+  },
+  {
+    "note": "Uppercase hex is not the canonical encoding.",
+    "payload": {
+      "nonce": "8F14E45FCEEA167A5A36DEDD4BEA2543A1F0B1C2D3E4F5A6B7C8D9E0F1A2B3C4"
+    }
+  },
+  {
+    "note": "Unknown top-level member is rejected (additionalProperties: false).",
+    "payload": {
+      "nonce": "8f14e45fceea167a5a36dedd4bea2543a1f0b1c2d3e4f5a6b7c8d9e0f1a2b3c4",
+      "__notARealMember__": true
+    }
+  }
+]

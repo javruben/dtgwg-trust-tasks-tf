@@ -1,0 +1,19 @@
+[
+  {
+    "note": "`nonce` is required.",
+    "payload": {}
+  },
+  {
+    "note": "`nonce` must be 32 bytes of lowercase hex.",
+    "payload": {
+      "nonce": "not-a-nonce"
+    }
+  },
+  {
+    "note": "Unknown top-level member is rejected (additionalProperties: false).",
+    "payload": {
+      "nonce": "0a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f60718293a4b5c6d7e8f9",
+      "configView": "e30="
+    }
+  }
+]
