@@ -15,11 +15,11 @@ export interface GitNamespacesViewPayload {
    */
   resource?: Resource;
   /**
-   * `member` (the default) — what the caller may see through their own git rights, exactly as in 0.4. `administrator` — everything in the namespaces the caller administers (every namespace, for a holder of the community-administrator capability; those they hold `git.ns.admin` on, for anyone else), reasons included. Refused with `git-ns/view:notAdministrator` when the caller administers no namespace within `resource`.
+   * `member` (the default) — what the caller may see through their own git rights, exactly as in 0.4. `administrator` — everything in the namespaces the caller administers (every namespace, for a holder of the community-administrator capability; those they hold `git.ns.admin` on, for anyone else), reasons included. Refused with `git-ns/view:notAdministrator` when the caller administers no namespace within `resource`. Absent means `"member"`; this carries no schema-level default, so a producer that omits it is not normalised into sending it.
    */
   scope?: "member" | "administrator";
   /**
-   * `true` narrows `rights` to the records carrying `breakGlass` — ratified ones included — and `namespaces` and `repos` to those that contain such a record. `false` or absent: no narrowing.
+   * `true` narrows `rights` to the records carrying `breakGlass` — ratified ones included — and `namespaces` and `repos` to those that contain such a record. `false` or absent: no narrowing. Absent means `false`; this carries no schema-level default, so a producer that omits it is not normalised into sending it.
    */
   breakGlass?: boolean;
   ext?: Ext;
@@ -103,13 +103,11 @@ export const PAYLOAD_SCHEMA = {
         "member",
         "administrator"
       ],
-      "default": "member",
-      "description": "`member` (the default) — what the caller may see through their own git rights, exactly as in 0.4. `administrator` — everything in the namespaces the caller administers (every namespace, for a holder of the community-administrator capability; those they hold `git.ns.admin` on, for anyone else), reasons included. Refused with `git-ns/view:notAdministrator` when the caller administers no namespace within `resource`."
+      "description": "`member` (the default) — what the caller may see through their own git rights, exactly as in 0.4. `administrator` — everything in the namespaces the caller administers (every namespace, for a holder of the community-administrator capability; those they hold `git.ns.admin` on, for anyone else), reasons included. Refused with `git-ns/view:notAdministrator` when the caller administers no namespace within `resource`. Absent means `\"member\"`; this carries no schema-level default, so a producer that omits it is not normalised into sending it."
     },
     "breakGlass": {
       "type": "boolean",
-      "default": false,
-      "description": "`true` narrows `rights` to the records carrying `breakGlass` — ratified ones included — and `namespaces` and `repos` to those that contain such a record. `false` or absent: no narrowing."
+      "description": "`true` narrows `rights` to the records carrying `breakGlass` — ratified ones included — and `namespaces` and `repos` to those that contain such a record. `false` or absent: no narrowing. Absent means `false`; this carries no schema-level default, so a producer that omits it is not normalised into sending it."
     },
     "ext": {
       "$ref": "#/$defs/Ext"
