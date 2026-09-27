@@ -161,6 +161,10 @@ pub fn schema_for(type_uri: &str) -> Option<&'static str> {
         #[cfg(feature = "auth")]
         "https://trusttasks.org/spec/auth/revoke-session/0.1#response" => <crate::specs::auth::revoke_session::v0_1::Response as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "auth")]
+        "https://trusttasks.org/spec/auth/revoke-session/0.2" => <crate::specs::auth::revoke_session::v0_2::Payload as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "auth")]
+        "https://trusttasks.org/spec/auth/revoke-session/0.2#response" => <crate::specs::auth::revoke_session::v0_2::Response as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "auth")]
         "https://trusttasks.org/spec/auth/sessions/list/0.1" => <crate::specs::auth::sessions::list::v0_1::Payload as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "auth")]
         "https://trusttasks.org/spec/auth/sessions/list/0.1#response" => <crate::specs::auth::sessions::list::v0_1::Response as crate::Payload>::PAYLOAD_SCHEMA,
@@ -782,6 +786,10 @@ pub fn schema_for(type_uri: &str) -> Option<&'static str> {
         "https://trusttasks.org/spec/keys/import/0.1" => <crate::specs::keys::import::v0_1::Payload as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "keys")]
         "https://trusttasks.org/spec/keys/import/0.1#response" => <crate::specs::keys::import::v0_1::Response as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "keys")]
+        "https://trusttasks.org/spec/keys/import-wrapping-key/0.1" => <crate::specs::keys::import_wrapping_key::v0_1::Payload as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "keys")]
+        "https://trusttasks.org/spec/keys/import-wrapping-key/0.1#response" => <crate::specs::keys::import_wrapping_key::v0_1::Response as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "keys")]
         "https://trusttasks.org/spec/keys/list/0.1" => <crate::specs::keys::list::v0_1::Payload as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "keys")]
@@ -1706,6 +1714,10 @@ pub fn schema_for(type_uri: &str) -> Option<&'static str> {
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/did-templates/update/3.0#response" => <crate::specs::vta::did_templates::update::v3_0::Response as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/health/details/0.1" => <crate::specs::vta::health::details::v0_1::Payload as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/health/details/0.1#response" => <crate::specs::vta::health::details::v0_1::Response as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/management/reload-services/1.0" => <crate::specs::vta::management::reload_services::v1_0::Payload as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/management/reload-services/1.0#response" => <crate::specs::vta::management::reload_services::v1_0::Response as crate::Payload>::PAYLOAD_SCHEMA,
@@ -1737,6 +1749,10 @@ pub fn schema_for(type_uri: &str) -> Option<&'static str> {
         "https://trusttasks.org/spec/vta/passkey-vms/revoke/0.1" => <crate::specs::vta::passkey_vms::revoke::v0_1::Payload as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/passkey-vms/revoke/0.1#response" => <crate::specs::vta::passkey_vms::revoke::v0_1::Response as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/restore/status/0.1" => <crate::specs::vta::restore::status::v0_1::Payload as crate::Payload>::PAYLOAD_SCHEMA,
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/restore/status/0.1#response" => <crate::specs::vta::restore::status::v0_1::Response as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/services/disable/1.0" => <crate::specs::vta::services::disable::v1_0::Payload as crate::Payload>::PAYLOAD_SCHEMA,
         #[cfg(feature = "vta")]
@@ -2503,6 +2519,10 @@ pub fn spec_policy_for(type_uri: &str) -> Option<crate::SpecPolicy> {
         #[cfg(feature = "auth")]
         "https://trusttasks.org/spec/auth/revoke-session/0.1" => Some(crate::SpecPolicy::of::<
             crate::specs::auth::revoke_session::v0_1::Payload,
+        >()),
+        #[cfg(feature = "auth")]
+        "https://trusttasks.org/spec/auth/revoke-session/0.2" => Some(crate::SpecPolicy::of::<
+            crate::specs::auth::revoke_session::v0_2::Payload,
         >()),
         #[cfg(feature = "auth")]
         "https://trusttasks.org/spec/auth/sessions/list/0.1" => Some(crate::SpecPolicy::of::<
@@ -3288,6 +3308,12 @@ pub fn spec_policy_for(type_uri: &str) -> Option<crate::SpecPolicy> {
         "https://trusttasks.org/spec/keys/import/0.1" => Some(crate::SpecPolicy::of::<
             crate::specs::keys::import::v0_1::Payload,
         >()),
+        #[cfg(feature = "keys")]
+        "https://trusttasks.org/spec/keys/import-wrapping-key/0.1" => {
+            Some(crate::SpecPolicy::of::<
+                crate::specs::keys::import_wrapping_key::v0_1::Payload,
+            >())
+        }
         #[cfg(feature = "keys")]
         "https://trusttasks.org/spec/keys/list/0.1" => Some(crate::SpecPolicy::of::<
             crate::specs::keys::list::v0_1::Payload,
@@ -4363,6 +4389,10 @@ pub fn spec_policy_for(type_uri: &str) -> Option<crate::SpecPolicy> {
             >())
         }
         #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/health/details/0.1" => Some(crate::SpecPolicy::of::<
+            crate::specs::vta::health::details::v0_1::Payload,
+        >()),
+        #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/management/reload-services/1.0" => {
             Some(crate::SpecPolicy::of::<
                 crate::specs::vta::management::reload_services::v1_0::Payload,
@@ -4399,6 +4429,10 @@ pub fn spec_policy_for(type_uri: &str) -> Option<crate::SpecPolicy> {
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/passkey-vms/revoke/0.1" => Some(crate::SpecPolicy::of::<
             crate::specs::vta::passkey_vms::revoke::v0_1::Payload,
+        >()),
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/restore/status/0.1" => Some(crate::SpecPolicy::of::<
+            crate::specs::vta::restore::status::v0_1::Payload,
         >()),
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/services/disable/1.0" => Some(crate::SpecPolicy::of::<
@@ -5274,6 +5308,10 @@ pub fn error_codes_for(type_uri: &str) -> Option<&'static [crate::DeclaredErrorC
             Some(crate::specs::auth::revoke_session::v0_1::ERROR_CODES)
         }
         #[cfg(feature = "auth")]
+        "https://trusttasks.org/spec/auth/revoke-session/0.2" => {
+            Some(crate::specs::auth::revoke_session::v0_2::ERROR_CODES)
+        }
+        #[cfg(feature = "auth")]
         "https://trusttasks.org/spec/auth/sessions/list/0.1" => {
             Some(crate::specs::auth::sessions::list::v0_1::ERROR_CODES)
         }
@@ -5912,6 +5950,10 @@ pub fn error_codes_for(type_uri: &str) -> Option<&'static [crate::DeclaredErrorC
         #[cfg(feature = "keys")]
         "https://trusttasks.org/spec/keys/import/0.1" => {
             Some(crate::specs::keys::import::v0_1::ERROR_CODES)
+        }
+        #[cfg(feature = "keys")]
+        "https://trusttasks.org/spec/keys/import-wrapping-key/0.1" => {
+            Some(crate::specs::keys::import_wrapping_key::v0_1::ERROR_CODES)
         }
         #[cfg(feature = "keys")]
         "https://trusttasks.org/spec/keys/list/0.1" => {
@@ -6856,6 +6898,10 @@ pub fn error_codes_for(type_uri: &str) -> Option<&'static [crate::DeclaredErrorC
             Some(crate::specs::vta::did_templates::update::v3_0::ERROR_CODES)
         }
         #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/health/details/0.1" => {
+            Some(crate::specs::vta::health::details::v0_1::ERROR_CODES)
+        }
+        #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/management/reload-services/1.0" => {
             Some(crate::specs::vta::management::reload_services::v1_0::ERROR_CODES)
         }
@@ -6886,6 +6932,10 @@ pub fn error_codes_for(type_uri: &str) -> Option<&'static [crate::DeclaredErrorC
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/passkey-vms/revoke/0.1" => {
             Some(crate::specs::vta::passkey_vms::revoke::v0_1::ERROR_CODES)
+        }
+        #[cfg(feature = "vta")]
+        "https://trusttasks.org/spec/vta/restore/status/0.1" => {
+            Some(crate::specs::vta::restore::status::v0_1::ERROR_CODES)
         }
         #[cfg(feature = "vta")]
         "https://trusttasks.org/spec/vta/services/disable/1.0" => {
