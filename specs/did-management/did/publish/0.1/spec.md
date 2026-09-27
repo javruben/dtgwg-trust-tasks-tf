@@ -99,7 +99,7 @@ A conforming **consumer** **MUST**: validate per [SPEC.md §7.2](/SPEC.md#72-con
     "method": "webvh",
     "didData": "{\"versionId\":\"1-...\",...}"
   },
-  "proof": { "type": "DataIntegrityProof", "cryptosuite": "eddsa-rdfc-2022", "verificationMethod": "did:key:z6MkAlice#key-0", "created": "2026-06-01T10:05:00Z", "proofPurpose": "assertionMethod", "proofValue": "z..." }
+  "proof": { "type": "DataIntegrityProof", "cryptosuite": "eddsa-rdfc-2022", "verificationMethod": "did:key:z6MkAlice#key-0", "created": "2026-06-01T10:05:00Z", "proofPurpose": "authentication", "proofValue": "z..." }
 }
 ```
 

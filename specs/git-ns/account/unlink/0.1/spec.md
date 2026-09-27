@@ -122,7 +122,7 @@ A member who has left the community has no binding to unlink — the VTC deletes
     "cryptosuite": "eddsa-jcs-2022",
     "verificationMethod": "did:webvh:QmBobScid2:acme-vtc.example:bob#key-1",
     "created": "2026-09-25T09:30:00Z",
-    "proofPurpose": "assertionMethod",
+    "proofPurpose": "authentication",
     "proofValue": "zMASi45ub7Qe4ZE36UT5G6cU4ud8Fhhe4deS4F3cw9KTAb8dLcukC7edhDQ7cn5d4gEYkbUrMWeWQLGsCmrG6dLa"
   }
 }
@@ -153,7 +153,7 @@ The VTC, now responding, returns the account that was unlinked, per the sub-sche
     "cryptosuite": "eddsa-jcs-2022",
     "verificationMethod": "did:webvh:QmVtcScid7:acme-vtc.example#key-1",
     "created": "2026-09-25T09:30:01Z",
-    "proofPurpose": "assertionMethod",
+    "proofPurpose": "authentication",
     "proofValue": "zYyNoVKf58ZTBqNAYT3j5qcdsyuMNmPfYetW5v6JXmj54omLidkuVKnRyjP2WPBg8Y4ErK9pGSSxY6BVScJy9uUx"
   }
 }

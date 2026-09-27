@@ -184,7 +184,7 @@ The full JSON Schema is in [`payload.schema.json`](payload.schema.json).
       "cryptosuite": "eddsa-jcs-2022",
       "verificationMethod": "did:peer:2.Ez6LSc…#key-1",
       "created": "2026-05-23T15:00:00Z",
-      "proofPurpose": "assertionMethod",
+      "proofPurpose": "authentication",
       "proofValue": "z6ab…",
       "challenge": "TWFpbnRhaW5lck5vbmNlVmFsdWU"
     },
