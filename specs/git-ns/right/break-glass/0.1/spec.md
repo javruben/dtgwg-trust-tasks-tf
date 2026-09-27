@@ -169,7 +169,7 @@ Carol is a namespace admin of `acme`. The repository's two owners are both unrea
     "cryptosuite": "eddsa-jcs-2022",
     "verificationMethod": "did:webvh:QmCarolScid3:acme-vtc.example:carol#key-1",
     "created": "2026-09-25T02:10:00Z",
-    "proofPurpose": "assertionMethod",
+    "proofPurpose": "authentication",
     "proofValue": "z4Hn8Qw2Tb6Rk9Xd3Lc7Mp1Fz5Ya8Js3Vg6Ue2Ti4Ob9Qn7Mk1Cr5Pw8El3Gh6Sy2Ad4Bv9Xf1Lj7Tq5Rz3Kn2M"
   }
 }
@@ -226,7 +226,7 @@ The VTC, now responding, returns the recorded right, per the sub-schema reachabl
     "cryptosuite": "eddsa-jcs-2022",
     "verificationMethod": "did:webvh:QmVtcScid7:acme-vtc.example#key-1",
     "created": "2026-09-25T02:10:31Z",
-    "proofPurpose": "assertionMethod",
+    "proofPurpose": "authentication",
     "proofValue": "z2Kp6Wm9Rb3Tx7Ln1Qc5Hd8Fz2Ya6Js1Vg7Ue9Ti3Ob5Qn2Mk8Cr4Pw6El1Gh9Sy3Ad7Bv5Xf2Lj8Tq4Rz6Kn1M"
   }
 }

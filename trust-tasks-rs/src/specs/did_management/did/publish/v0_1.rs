@@ -1049,7 +1049,7 @@ mod conformance {
     //! in `payload.invalid-examples.json` (validate feature).
     #[test]
     fn request_example_1() {
-        const JSON: &str = "{\n  \"id\": \"11111111-2222-4333-8444-555555555555\",\n  \"type\": \"https://trusttasks.org/spec/did-management/did/publish/0.1\",\n  \"issuer\": \"did:key:z6MkAlice\",\n  \"recipient\": \"did:web:did.example.com\",\n  \"issuedAt\": \"2026-06-01T10:05:00Z\",\n  \"payload\": {\n    \"mnemonic\": \"alice\",\n    \"method\": \"webvh\",\n    \"didData\": \"{\\\"versionId\\\":\\\"1-...\\\",...}\"\n  },\n  \"proof\": { \"type\": \"DataIntegrityProof\", \"cryptosuite\": \"eddsa-rdfc-2022\", \"verificationMethod\": \"did:key:z6MkAlice#key-0\", \"created\": \"2026-06-01T10:05:00Z\", \"proofPurpose\": \"assertionMethod\", \"proofValue\": \"z...\" }\n}\n";
+        const JSON: &str = "{\n  \"id\": \"11111111-2222-4333-8444-555555555555\",\n  \"type\": \"https://trusttasks.org/spec/did-management/did/publish/0.1\",\n  \"issuer\": \"did:key:z6MkAlice\",\n  \"recipient\": \"did:web:did.example.com\",\n  \"issuedAt\": \"2026-06-01T10:05:00Z\",\n  \"payload\": {\n    \"mnemonic\": \"alice\",\n    \"method\": \"webvh\",\n    \"didData\": \"{\\\"versionId\\\":\\\"1-...\\\",...}\"\n  },\n  \"proof\": { \"type\": \"DataIntegrityProof\", \"cryptosuite\": \"eddsa-rdfc-2022\", \"verificationMethod\": \"did:key:z6MkAlice#key-0\", \"created\": \"2026-06-01T10:05:00Z\", \"proofPurpose\": \"authentication\", \"proofValue\": \"z...\" }\n}\n";
         let doc: crate::TrustTask<super::Payload> =
             serde_json::from_str(JSON).expect("deserialize request example");
         let rendered = serde_json::to_value(&doc).expect("re-serialize");

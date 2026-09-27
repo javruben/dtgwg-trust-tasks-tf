@@ -132,7 +132,7 @@ The registry projection does not change: the right was already published as an o
     "cryptosuite": "eddsa-jcs-2022",
     "verificationMethod": "did:webvh:QmDanaScid8:acme-vtc.example:dana#key-1",
     "created": "2026-09-25T09:00:00Z",
-    "proofPurpose": "assertionMethod",
+    "proofPurpose": "authentication",
     "proofValue": "z5Tn2Qw8Kb4Rx6Ld9Mc3Hp7Fz1Ya5Js8Vg2Ue4Ti6Ob1Qn9Mk3Cr7Pw5El2Gh8Sy4Ad6Bv1Xf3Lj9Tq2Rz5Kn7M"
   }
 }
@@ -173,7 +173,7 @@ The VTC, now responding, returns the ratified record, per the sub-schema reachab
     "cryptosuite": "eddsa-jcs-2022",
     "verificationMethod": "did:webvh:QmVtcScid7:acme-vtc.example#key-1",
     "created": "2026-09-25T09:00:01Z",
-    "proofPurpose": "assertionMethod",
+    "proofPurpose": "authentication",
     "proofValue": "z3Wm7Qx1Rb9Tk5Ld2Hc6Np8Fz3Ya1Js7Vg4Ue6Ti2Ob8Qn5Mk7Cr1Pw3El6Gh2Sy9Ad5Bv8Xf4Lj1Tq6Rz2Kn3M"
   }
 }

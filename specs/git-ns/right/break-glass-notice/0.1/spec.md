@@ -114,7 +114,7 @@ A recipient that shows administrators alerts **SHOULD** show a `breakGlass` noti
     "cryptosuite": "eddsa-jcs-2022",
     "verificationMethod": "did:webvh:QmVtcScid7:acme-vtc.example#key-1",
     "created": "2026-09-25T02:10:32Z",
-    "proofPurpose": "assertionMethod",
+    "proofPurpose": "authentication",
     "proofValue": "z6Rn3Qw9Kb2Tx8Lm4Hc1Np5Fz7Ya3Js6Vg9Ue1Ti8Ob2Qn4Mk6Cr9Pw1El7Gh3Sy5Ad2Bv6Xf9Lj3Tq1Rz8Kn4M"
   }
 }

@@ -159,7 +159,7 @@ A *Trust Task document* **MAY** contain additional top-level members beyond thos
 >     "cryptosuite": "eddsa-jcs-2022",
 >     "verificationMethod": "did:web:org.example#key-1",
 >     "created": "2026-06-10T14:00:00Z",
->     "proofPurpose": "assertionMethod",
+>     "proofPurpose": "authentication",
 >     "proofValue": "z5xy..."
 >   }
 > }
@@ -1188,7 +1188,7 @@ Under `identityMismatch` a *consumer* **SHOULD** omit `inResponseTo.id`: per [Th
 >     "cryptosuite": "eddsa-jcs-2022",
 >     "verificationMethod": "did:web:maintainer.example#key-1",
 >     "created": "2026-06-11T14:05:00Z",
->     "proofPurpose": "assertionMethod",
+>     "proofPurpose": "authentication",
 >     "proofValue": "z58D..."
 >   }
 > }
@@ -1880,7 +1880,7 @@ Both codes are namespaced under the emitting specification's own slug, per rule 
     "cryptosuite": "eddsa-jcs-2022",
     "verificationMethod": "did:web:org.example#key-1",
     "created": "2026-06-10T14:00:00Z",
-    "proofPurpose": "assertionMethod",
+    "proofPurpose": "authentication",
     "proofValue": "z5xy..."
   }
 }
