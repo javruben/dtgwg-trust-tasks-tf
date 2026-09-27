@@ -1,0 +1,42 @@
+[
+  {
+    "note": "`service` is required.",
+    "payload": {
+      "drainTtlSecs": 3600
+    }
+  },
+  {
+    "note": "`service` must name a known transport kind.",
+    "payload": {
+      "service": "smtp"
+    }
+  },
+  {
+    "note": "`drainTtlSecs` must be an integer number of seconds, not a string.",
+    "payload": {
+      "service": "didcomm",
+      "drainTtlSecs": "2d"
+    }
+  },
+  {
+    "note": "`drainTtlSecs` must not be negative.",
+    "payload": {
+      "service": "didcomm",
+      "drainTtlSecs": -1
+    }
+  },
+  {
+    "note": "`drainTtlSecs` must be whole seconds.",
+    "payload": {
+      "service": "tsp",
+      "drainTtlSecs": 1.5
+    }
+  },
+  {
+    "note": "Unknown top-level member is rejected (additionalProperties: false).",
+    "payload": {
+      "service": "didcomm",
+      "drainTtl": 3600
+    }
+  }
+]
