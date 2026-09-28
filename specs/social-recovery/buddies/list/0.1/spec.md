@@ -115,8 +115,9 @@ The device owner asks for the current roster. The top-level schema is in
 
 ## Response
 
-The maintainer returns the current roster. The sub-schema is reachable via
-`$anchor: "response"`. Failures are `trust-task-error` documents.
+The maintainer returns the current roster. The response shape below is normative
+prose: `payload.schema.json` governs the REQUEST only and carries no response
+sub-schema. Failures are `trust-task-error` documents.
 
 ### Roster returned
 

@@ -113,9 +113,9 @@ The device owner names the querying device. The top-level schema is in
 
 ## Response
 
-The maintainer reports the device's current recovery-need status. The
-sub-schema is reachable via `$anchor: "response"`. Failures are
-`trust-task-error` documents.
+The maintainer reports the device's current recovery-need status. The response
+shape below is normative prose: `payload.schema.json` governs the REQUEST only
+and carries no response sub-schema. Failures are `trust-task-error` documents.
 
 ### Device healthy, no recovery needed
 

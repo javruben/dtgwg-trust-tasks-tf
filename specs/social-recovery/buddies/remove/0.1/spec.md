@@ -123,9 +123,10 @@ The device owner names the buddy to remove. The top-level schema is in
 
 ## Response
 
-The maintainer confirms the buddy is removed and the current roster
-count. The sub-schema is reachable via `$anchor: "response"`. Failures are
-`trust-task-error` documents.
+The maintainer confirms the buddy is removed and the current roster count. The
+response shape below is normative prose: `payload.schema.json` governs the
+REQUEST only and carries no response sub-schema. Failures are `trust-task-error`
+documents.
 
 ### Buddy removed
 

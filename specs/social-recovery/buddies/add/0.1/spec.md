@@ -161,9 +161,10 @@ top-level schema is in [`payload.schema.json`](payload.schema.json).
 
 ## Response
 
-The maintainer confirms the buddy is enrolled, echoing the enrolled
-identifier and the key record it created. The sub-schema is reachable via
-`$anchor: "response"`. Failures are `trust-task-error` documents.
+The maintainer confirms the buddy is enrolled, echoing the enrolled identifier
+and the key record it created. The response shape below is normative prose:
+`payload.schema.json` governs the REQUEST only and carries no response
+sub-schema. Failures are `trust-task-error` documents.
 
 ### Buddy enrolled
 
