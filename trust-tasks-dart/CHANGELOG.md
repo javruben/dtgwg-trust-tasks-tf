@@ -11,6 +11,164 @@ Publishing is triggered by the `trust-tasks-dart-v<version>` tag, because
 pub.dev only accepts an automated publish from a tag-triggered workflow. See
 `RELEASING.md`.
 
+## 0.3.13 — 2026-09-28
+
+
+### Added
+
+- **vta/contexts/update-did**: 1.1 — clear a context's DID with did: null (#684)
+
+* feat(vta/contexts/update-did): 1.1 — clear a context's DID with did: null
+
+  1.0 required a non-empty `did`, and `vta/contexts/update` only ever sets
+  one, so once a context had a DID it could be replaced but never removed.
+  The VTA refuses to delete a DID a context acts as and tells the operator
+  to reassign it — which left no way to retire a context's last DID short
+  of assigning one they did not want.
+
+  1.1 makes `did` nullable: `null` leaves the context with no DID, the
+  same state as one created without, and the record comes back with `did`
+  absent. A string `did` must now match the DID Core §3.1 grammar; 1.0's
+  `minLength: 1` accepted "did:" and "hello" as identities. Both are
+  permitted as a MINOR bump on a draft spec (SPEC §5.2), and a 1.1
+  consumer must still accept 1.0.
+
+## 0.3.12 — 2026-09-28
+
+
+### Added
+
+- **vtc/website**: Website content moves as a chunked Trust Task transfer (#682)
+
+Replaces the raw-byte REST routes (GET/PUT /website/files/{path}, POST /website/deploy) with Trust Tasks, modelled on backup/* and reusing vta/_shared/0.1/backup-transfer's chunk vocabulary:
+
+  - vtc/website/upload/begin — commits the target (a file at a path, with optional ifMatch, or a whole-site bundle), total size, whole-content SHA-256 and every chunk digest before any byte moves.
+  - vtc/website/upload/chunk — one chunk of up to 256 KiB, checked against the manifest on arrival; idempotent.
+  - vtc/website/upload/commit — reassembles and verifies the SHA-256; writes a file target atomically, or stages a bundle.
+  - vtc/website/upload/abort — discards an open or staged upload.
+  - vtc/website/deploy — publishes a staged bundle (live replace, or a new managed generation with pruning).
+  - vtc/website/files/show — ranged reads of up to 256 KiB with the whole-file etag.
+
+  begin, chunk and files/show declare maxDocumentBytes (256 KiB, 352 KiB, 352 KiB response), so the community's 64 KiB default is not raised for every other task. Shared component vtc/_shared/0.1/website-transfer. Bindings regenerated for Rust, TypeScript, Go and Dart.
+
+- **vtc**: Trust Tasks for the community's REST-only admin surfaces (#680)
+
+* feat(vtc): Trust Tasks for the community's REST-only admin surfaces
+
+  Specifies, at 0.1, the VTC operations that existed only as REST routes, so each can be served as a sender-bound signed Trust Task over TSP, DIDComm or HTTPS:
+
+  - auth/signing-key/{enroll,list,revoke} — delegated signing keys (the admin console's non-extractable browser key). Enrolment is signed by the key being enrolled (proof of possession) and names the identity it acts for; control of that identity is established by separate authority evidence, which the reference implementation takes as an operation-bound passkey step-up.
+  - vtc/community/{branding,requested-attributes,join-discovery}/{show,update}
+  - vtc/schemas/{register,list,show,delete} and vtc/schemas/accepts/{register,list,show,delete} — register and show declare maxDocumentBytes, since a credential schema exceeds the 64 KiB default.
+  - vtc/vetting/vetters/grants/list, vtc/vetting/auto-grant/{show,update}, vtc/vetting/revocations/list
+  - vtc/relationships/{suspend,restore} — the edge issuer's own proof replaces the REST pop authorization.
+  - vtc/join-requests/vetting/show, and vtc/join-requests/query — its own task rather than credential-exchange/*, because an administrator instructs the verifier, which alone can author the query's challenge.
+  - vtc/rooms/list — under vtc/, not rooms/, because it is authorized by host ACL and rooms invariant I5 forbids that for any rooms/* task.
+
+  Shared components: auth/_shared/0.1/signing-key and vtc/_shared/0.1/{community-presentation,schema-registry,vetting-auto-grant,relationship-lifecycle}. Relationship persona attach/detach stays out, blocked on dtgwg-cred-spec#9. Bindings regenerated for Rust, TypeScript, Go and Dart.
+
+- **spec-meta**: A specification declares its own maximum document size (#679)
+
+Adds an optional front-matter member, maxDocumentBytes { request?, response?, rationale }, stating the largest serialized Trust Task document (proof included, transport envelope excluded) of each variant that a consumer serving the task must not refuse on grounds of size alone, and should refuse beyond with malformedRequest.
+
+  SPEC §12.4 already tells a consumer to bound what it parses at "a body-size limit appropriate to the Trust Task specification's payload", and §7.3 item 19 notes that a transport-layer limit is the wrong place to pick the number; until now no specification could say what it was. A consumer serving many tasks therefore applied one blanket cap sized for the small ones, and a task that legitimately carries a JSON Schema or a chunk of a file was refused. This lets the bound be stated, and enforced, per type.
+
+  - specs/spec.meta.schema.json: the member (at least one variant, 1 KiB to 16 MiB; larger content belongs in a chunked transfer).
+  - trust-tasks-codegen: reads it and emits Payload::MAX_DOCUMENT_BYTES on the request and response impls, plus schema_index::max_document_bytes_for(type_uri) for a dispatcher that learns the type before parsing. An absent variant never inherits the other's bound.
+  - trust-tasks-rs: the trait constant, defaulting to None.
+  - check-bindings: holds Rust's constants to the front matter, re-derived independently.
+  - CONTRIBUTING-SPECS: when and how to declare it.
+
+  Rust only for now, like ERROR_CODES; the TypeScript, Go and Dart generators do not emit it yet. The framework text (a §7.3 item) is proposed in the canonical specification repository; this is the registry's half.
+
+
+
+### Specifications
+
+- **webvh/witness/sign**: Let a witness sign the entry that deactivates a DID (#681)
+
+## 0.3.11 — 2026-09-28
+
+
+### Added
+
+- **trust-task-discovery**: Publish 0.3, a responder advertises its acceptance window (#677)
+
+A consumer refuses a document whose issuedAt lies outside its acceptance
+  window (SPEC §7.2 item 13), and the framework leaves that window to the
+  consumer's policy. A producer that holds a document before delivering it
+  (store-and-forward, retry, escalation, a queue replayed after a restart)
+  cannot tell a document the consumer will still accept from one it will
+  refuse as expired. So it cannot tell when to issue a new attempt (SPEC
+  §8.4) instead. The only alternative is a constant both ends share.
+
+  - specs/trust-task-discovery/0.3: the response gains an optional
+    acceptanceWindow { maxAgeSeconds, clockSkewSeconds }, in whole seconds.
+    It appears at the response level, and on an expanded supportedTypes
+    entry, where the entry's value takes precedence.
+    - Responder: MUST NOT state a window wider than it applies, and is not
+      bound by what it advertised.
+    - Discoverer: authenticated responses only. SHOULD NOT send after
+      issuedAt + maxAge, and MUST NOT after issuedAt + maxAge + skew. It
+      issues a new attempt instead (fresh id and issuedAt, same thread,
+      new proof), and never re-stamps under the original id (idConflict).
+      It does not issue a new attempt of a consequential task unless a
+      repeat is harmless or recognizable. It never backdates to fit a
+      window, bounds its new attempts, and treats a refusal as the answer.
+    - Absent: the discoverer has learnt nothing. It falls back to the
+      window the task's specification states (item 17) or its own, with
+      the typical skew tolerance of at most 60 s. Absence is never read as
+      "no window".
+    - The response is closed, so a 0.2 discoverer that validates would
+      reject the member. §5.2 makes an added optional member a MINOR
+      increment, hence 0.3 rather than an edit to 0.2.
+    - Response-side invalid examples: a missing member, a zero max age,
+      negative skew, fractional or string values, an unknown member, and
+      a malformed entry-level window.
+  - trust-tasks-codegen: a payload.invalid-examples.json fixture may carry
+    "variant": "response". It is checked against Response and its
+    sub-schema by a separate rejects_invalid_response_examples test. It is
+    refused in a spec with no response. Existing fixtures, and every other
+    generated module, are unchanged.
+  - CONTRIBUTING-SPECS.md documents the variant.
+  - Bindings regenerated (Rust, TS, Go, Dart).
+
+  The framework text (SPEC §10) still names 0.2 as the current version.
+  That is a change to the canonical repository and follows separately.
+
+  Proposed from OpenVTC/verifiable-trust-infrastructure#1799, where both
+  ends currently share a constant window.
+
+## 0.3.10 — 2026-09-28
+
+
+### Added
+
+- **auth**: Authenticate 0.2 binds a session key to the session (#675)
+
+A wallet login signs the auth/challenge/auth/authenticate exchange with the
+  subject's own key, which today means one wallet prompt per console call for
+  the lifetime of the session -- there is no equivalent of the passkey login
+  path's browser-bound key. This adds an optional payload.sessionKey (a
+  did:key VID) to auth/authenticate: the producer generates it fresh per
+  login, ideally as a non-extractable key, and the consumer binds it to the
+  session it creates. Once bound, a proof by that key stands in for the
+  subject for that session only -- bounded by the session's expiry and acr,
+  and never accepted where a spec requires an assertionMethod attestation
+  (auth/step-up/approve-response, task-consent/decision, confirm/response).
+  Consumers that don't support the requested key type MAY refuse with the new
+  auth/authenticate:sessionKeyUnsupported code.
+
+  The shared Session shape gains the same optional sessionKey member, as a new
+  _shared/0.2 component version (auth/whoami and auth/sessions/list still pin
+  0.1 and would need their own version bump to surface it -- out of scope
+  here). wireCompatibleWith was considered and not declared: 0.2 is a strict,
+  non-identical superset of 0.1's wire shape, not the wire-identical case that
+  field is for.
+
+  Regenerated all four bindings (Rust, TS, Go, Dart) and confirmed
+  check-bindings agrees across all of them.
+
 ## 0.3.9 — 2026-09-27
 
 
