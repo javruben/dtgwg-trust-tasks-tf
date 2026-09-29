@@ -251,3 +251,10 @@ owner has already enrolled the same party, for the same
 distinguishing-"not yours"-from-"doesn't exist" reason given in
 `vault/credentials/archive`'s Custody scope section and restated in this
 cluster's `sharing/connection/update` specification.
+distinguishing-"not yours"-from-"doesn't exist" reason given in
+`vault/credentials/archive`'s Custody scope section and restated in this
+cluster's `sharing/connection/update` specification.
+
+## Open Questions for Registry Review
+
+🟡 NEEDS-REVIEW: The `selfEnrollment` error code declared in this spec's frontmatter is not emitted by any code path we could find in the reference implementation — nothing compares the proposed buddy's DID to the requesting owner's own DID, even though that owner identity is already resolved and in scope at the point of the check, so an owner naming themselves as their own recovery buddy is currently accepted rather than rejected. As with `deviceNotFound` in the companion `status/get` task, we are flagging the discrepancy between the documented contract and the observed behavior for reviewer attention rather than resolving it unilaterally.

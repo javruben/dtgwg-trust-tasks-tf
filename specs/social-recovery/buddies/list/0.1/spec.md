@@ -221,3 +221,10 @@ A recovery maintainer typically serves more than one owner's identity. It
 **MUST** scope this read strictly to the requesting owner's own roster,
 and **MUST NOT** ever return a different owner's enrolled buddies through
 this operation.
+**MUST** scope this read strictly to the requesting owner's own roster,
+and **MUST NOT** ever return a different owner's enrolled buddies through
+this operation.
+
+## Open Questions for Registry Review
+
+🟡 NEEDS-REVIEW: In the reference implementation, this operation is a same-device, owner-local read (the daemon's own Settings → Recovery buddies screen listing the operator's own roster) rather than one party sending a request that a distinct "recovery maintainer" party answers about someone else's data — the handler takes no per-request identifier and always resolves the caller's own identity chain. We are documenting it as specified because that is what the shipping code does, but whether a same-device configuration read belongs in a peer-facing Trust Task registry at all, as opposed to staying purely local and out of scope for this registry, is a design question we cannot resolve ourselves and would welcome the maintainers' judgment on.

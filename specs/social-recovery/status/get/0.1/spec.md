@@ -219,3 +219,10 @@ requesting owner actually controls, and **MUST** answer a `localDeviceDid`
 belonging to a different owner identically to a nonexistent one, the same
 enumeration-refusal discipline `vault/credentials/archive`'s Custody scope
 section states for its own boundary.
+belonging to a different owner identically to a nonexistent one, the same
+enumeration-refusal discipline `vault/credentials/archive`'s Custody scope
+section states for its own boundary.
+
+## Open Questions for Registry Review
+
+🟡 NEEDS-REVIEW: The `deviceNotFound` error code declared in this spec's frontmatter is not emitted by any code path we could find in the reference implementation; `localDeviceDid` is only ever checked for membership in the identity's currently-active-device list, never looked up against an owner/device record that could actually produce a "not found" outcome for an unrecognized DID. We are flagging this gap between the documented error contract and the observed behavior rather than silently dropping the declared code or inventing an implementation to match it — whether the fix belongs in the spec (remove the code) or in the implementation (add the lookup) is a call we'd like reviewer input on.
