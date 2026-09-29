@@ -13,6 +13,10 @@
  */
 
 /**
+ * An Accepts criterion's identifier, chosen by the registering administrator — a ceremony purpose or a named manifest criterion, e.g. `membership`. Compared as an exact string after surrounding whitespace is trimmed. Bounded at 128 characters, the bound vtc/join-requests/manifest/0.2 places on the criterion `id` it publishes.
+ */
+export type AcceptsCriterionId = string;
+/**
  * The account's role at the mediator. `standard` is an ordinary served account; `admin`/`rootAdmin` may administer other accounts; `mediator` is the mediator's own account. Only a rootAdmin may assign or modify the rootAdmin role.
  */
 export type AccountType = "standard" | "admin" | "rootAdmin" | "mediator";
@@ -133,6 +137,14 @@ export type CountryCode = string;
  */
 export type CredentialId = string;
 /**
+ * A credential type URI — the W3C `type` value or the SD-JWT-VC `vct` a credential of this type carries. The registry's primary key, compared as an exact string after surrounding whitespace is trimmed. Bounded at 512 bytes because it keys the community's storage.
+ */
+export type CredentialTypeUri = string;
+/**
+ * Plain-language summary of the criterion, written by the registering administrator. Published to prospective applicants in the join manifest, and used as the `purpose` of the credential-exchange/query a join sends when it is present — so it is read by applicants and their agents, not only by administrators. Untrusted as a statement of the rule: where it and `query` or `vetting` disagree, those govern.
+ */
+export type CriterionDescription = string;
+/**
  * The root of the room's record tree — a host's commitment to *which records the room holds*, as distinct from what any one of them says.
  *
  * A room's records are already signed and room-bound, so a host cannot forge, alter or relocate one. What it can do for free is stay silent: a listing that omits a record is indistinguishable from a room that never held it. This value is what makes that omission detectable, so it is only worth anything when the reader can compare it against a copy the host did not choose for them — one it gave another member, one it gave the same member earlier, or the witnessed anchor. A commitment read once, in isolation, proves nothing.
@@ -182,6 +194,10 @@ export type DeviceAttestation_DeviceV0_2 =
   | NitroEnclave_DeviceV0_2
   | NoAttestation_DeviceV0_2;
 /**
+ * A human-readable name for where the key lives, chosen by the enrolling identity — e.g. `Work laptop — Chrome`. Read by that identity and by administrators deciding which key to revoke; retained with the delegation. Free text authored by the enrolling identity, untrusted, and attributed to it wherever it is rendered. Absent rather than invented when none was chosen: an invented label is indistinguishable from a chosen one to somebody deciding which key to revoke.
+ */
+export type DeviceLabel = string;
+/**
  * A DID Core verification relationship.
  */
 export type DidVerificationRelationship =
@@ -218,6 +234,14 @@ export type DriftType =
   | "requiredCheckMissing"
   | "protectionWeakened"
   | "bootstrapMissing";
+/**
+ * The DTG credential catalog type the entry binds to, e.g. `MembershipCredential`. Absent for a community-defined endorsement type that maps onto the generic `EndorsementCredential`.
+ */
+export type DtgType = string;
+/**
+ * An ISO 8601 duration in weeks, days, hours, minutes and seconds only (e.g. `P120D`, `P2W`, `P1DT12H`, `PT15M`). Years and months are refused: their length depends on the calendar, and an age limit that means different things on different days is not a limit.
+ */
+export type Duration = string;
 /**
  * Whether the subject is permitted. The ABSENCE of any grant is treated as `deny` (default-deny).
  */
@@ -280,6 +304,10 @@ export type FaceReach =
  */
 export type FacetColour = "slate" | "indigo" | "teal" | "moss" | "sand" | "clay" | "rose" | "plum";
 /**
+ * A range of a file's bytes, base64url-encoded without padding (RFC 4648 §5). Empty for an empty range. Bounded at 349526 characters, the unpadded encoding of the 262144-byte range ceiling.
+ */
+export type FileData = string;
+/**
  * The lowercased DNS host of a forge: `github.com`, a GitHub Enterprise Server host, `codeberg.org`, or a self-hosted Forgejo instance such as `git.example.org`. No scheme, no port, no path. The host is a segment of every resource, so a right never crosses forges.
  */
 export type ForgeHost = string;
@@ -287,6 +315,10 @@ export type ForgeHost = string;
  * An identifier the forge itself assigns — a repository id, a user or organisation id — carried as a string so a forge whose ids are not numbers needs no new version. GitHub and Forgejo ids are decimal integers written as strings (`"812736451"`). Unlike a name, it survives renames and transfers, which is why rights and bindings are keyed by it.
  */
 export type ForgeId = string;
+/**
+ * Validity of a grant the sweep issues, in seconds: between one day and two years, the bounds vtc/vetting/vetters/grant applies to an administrator's grants.
+ */
+export type GrantValiditySeconds = number;
 /**
  * The highest version among the records `DataCommitment` covers. `0` for a room that holds none.
  *
@@ -343,6 +375,10 @@ export type Kind = "dm" | "group" | "channel";
  * A BCP 47 language tag, e.g. `en`, `de-AT`. Compared case-insensitively.
  */
 export type LanguageTag = string;
+/**
+ * Why the edge was suspended or restored, stored verbatim on the lifecycle event. Free text written by the caller — the edge's issuer or a moderating administrator — and read by the counterparty and by administrators; retained with the edge. Untrusted, attributed to its author wherever rendered, and never read by the community's state machine.
+ */
+export type LifecycleReason = string;
 /**
  * Scopes one application's records within a context, so several tools can share a context without colliding — `openvtc`, `cnm`, an agent runtime. The maintainer MUST NOT interpret the value; it is an opaque partition name. Namespaces are first-come and unreserved, so an application SHOULD pick a stable, specific one: a future per-namespace ACL would grant on this exact string, which makes renaming a namespace a migration rather than an edit.
  */
@@ -536,6 +572,12 @@ export type RepoResource = string;
  */
 export type RepoVisibility = "public" | "private";
 /**
+ * What the community asks an applicant to tell it about themselves, as claim types — never values. At most 32 entries, and no claim type twice: two answers to one question is a question nobody can answer. Self-asserted by the applicant when answered; a community MUST NOT describe an answer as verified. Empty means the community asks nothing.
+ *
+ * @maxItems 32
+ */
+export type RequestedAttributes = RequestedAttribute[];
+/**
  * A forge-qualified resource: `<forge-host>/<owner>` for a namespace, or `<forge-host>/<owner>/<repo>` for one repository, all lowercase — `github.com/acme`, `github.com/acme/widgets`, `codeberg.org/acme`. The forge is never implied: `acme/widgets` alone is not a resource. Containment is by whole segment: `github.com/acme` contains `github.com/acme/widgets` and does not contain `github.com/acme-labs/x` or `codeberg.org/acme/widgets`.
  */
 export type Resource = string;
@@ -563,6 +605,14 @@ export type RotationState = "pendingApproval" | "staged" | "overlapping" | "comp
  * How a consent prompt reaches the approver: `wake` pushes to the approver's device for a DID-signed decision; `bridge-relay` renders it through an enrolled bridge (e.g. a numbered card in the operator's messaging app) for a bridge-attested decision.
  */
 export type Route = "wake" | "bridge-relay";
+/**
+ * An administrator's description of the entry, shown in administration surfaces. Free text written by the registering administrator and read by other administrators; untrusted, attributed to `createdByDid` wherever it is rendered, and never read by the community's own logic.
+ */
+export type SchemaDescription = string;
+/**
+ * Which half of the registry an entry is on. `issues`: the community mints credentials of this type, and issuance refuses a type not registered as `issues`. `accepts`: the community recognises credentials of this type as evidence, and an Accepts criterion may reference only a registered type.
+ */
+export type SchemaKind = "issues" | "accepts";
 /**
  * What the agent may do: `receive` = read inbound on this conversation; `converse` = read and reply.
  */
@@ -646,6 +696,14 @@ export type ServiceKind = "didcomm" | "rest" | "tsp" | "webauthn";
  */
 export type SignAlgorithm = "EdDSA" | "ES256" | "ML-DSA-44" | "ML-DSA-65";
 /**
+ * The delegated key, as a `did:key` — an Ed25519 multikey (`z6Mk…`) derived from the public half of a keypair the holder generated for itself, typically a non-extractable browser key. `did:key` only, because its document is a function of the key and resolves with no network: a key whose DID document could be rewritten after enrolment is not the key that was enrolled.
+ */
+export type SigningKeyDid = string;
+/**
+ * What a delegated key may be accepted for. `console`: the operations an administration console performs on the identity's behalf, authorized by the identity's own standing. Never an approver's signature on a consent or approval decision, whatever the scope: those require an `assertionMethod` key of the approver's own DID document, which a delegated key never is. A closed enumeration so a consumer cannot be asked for a scope it does not define; a later version adds values.
+ */
+export type SigningKeyScope = "console";
+/**
  * A single binding target for a vault entry. Tagged union over the discriminator `kind`. A VaultEntry's `targets` array MAY mix any number of these.
  */
 export type SiteTarget_VaultV0_1 = WebOrigin_VaultV0_1 | Did_VaultV0_1 | IosApp_VaultV0_1 | AndroidApp_VaultV0_1;
@@ -665,6 +723,10 @@ export type SiteTarget_VaultV0_2 = WebOrigin_VaultV0_2 | Did_VaultV0_2 | IosApp_
  * Other values are the holder's or the producer's own and carry no meaning a maintainer interprets.
  */
 export type Slot = string;
+/**
+ * Minutes between sweeps: at most every five minutes, at least once a day.
+ */
+export type SweepMinutes = number;
 export type SyncEvent_SyncV0_1 =
   | VaultUpsertedEvent_SyncV0_1
   | VaultDeletedEvent_SyncV0_1
@@ -699,6 +761,10 @@ export type TrafficStage =
  * A ULID in Crockford base32, uppercase. Used for `attributeId` and `profileId`. Chosen over a UUID because the leading 48 bits are a timestamp, so a key-ordered scan of the store is also creation-ordered and a `list` needs no secondary sort. Server-assigned on create; a producer MAY supply one to make a create idempotent, and a maintainer MUST reject a supplied value that already exists rather than silently overwriting.
  */
 export type Ulid = string;
+/**
+ * Handle for one upload across begin, chunk, commit and abort, and — for a bundle — deploy. Recipient-generated and unguessable, which is what lets a reference to somebody else's upload be answered as not-found without confirming it exists. Opaque: a producer quotes what it was given.
+ */
+export type UploadId = string;
 /**
  * The JSON shape of `value`, declared so that a consumer can render and compare without guessing. The maintainer validates that `value` agrees with this member and does nothing further: it does NOT validate a phone number against a phone-number grammar. That is a producer's affordance, and a store that grows opinions about the contents of its records eventually blocks its consumer's release.
  */
@@ -917,6 +983,14 @@ export type Vid = string;
  */
 export type Visibility = "open" | "attributed" | "private";
 /**
+ * A file's content hash: the lowercase hex SHA-256 of its bytes — the `etag` vtc/website/files/list reports, and the `ETag` a direct read of the path returns, without the HTTP quotes.
+ */
+export type WebsiteEtag = string;
+/**
+ * A file's path relative to the site root, `/`-separated, with or without a leading `/`. The community resolves it inside the site root and refuses one that escapes the root (`..`), names a hidden file or directory (a segment beginning `.`), carries a blocklisted extension, or contains a control character — the same rules the public read handler applies, so nothing can be written that the site would refuse to serve, and nothing can be read that it would not.
+ */
+export type WebsitePath = string;
+/**
  * The protocol a message travelled in, as the mediator detected it from the wire form. `didcomm` is DIDComm v2 (JWE/JWS); `didcommV1` is a DIDComm v1 envelope; `tsp` is a Trust Spanning Protocol message; `other` is anything the mediator could not classify.
  */
 export type WireProtocol = "didcomm" | "didcommV1" | "tsp" | "other";
@@ -925,6 +999,23 @@ export type WireProtocol = "didcomm" | "didcommV1" | "tsp" | "other";
  */
 export type WorldColour = "slate" | "indigo" | "teal" | "moss" | "sand" | "clay" | "rose" | "plum";
 
+/**
+ * A named required-evidence criterion: the DCQL query a ceremony runs to decide whether a holder's presented credentials satisfy the community, and the peer identity vetting it requires. What vtc/join-requests/manifest/0.2 publishes to applicants as a `Criterion` is derived from this.
+ */
+export interface AcceptsCriterion {
+  id: AcceptsCriterionId;
+  query: DcqlQuery;
+  description?: CriterionDescription;
+  vetting?: VettingRequirements;
+  /**
+   * When this criterion was last registered. Registering an existing id replaces it.
+   */
+  createdAt: string;
+  /**
+   * The administrator who last registered the criterion.
+   */
+  createdByDid: string;
+}
 /**
  * The mediator's view of one served account.
  */
@@ -1428,6 +1519,39 @@ export interface AuthorityPresentation {
   subjectBinding?: string;
 }
 /**
+ * The effective configuration — defaults filled in — and the last sweep.
+ */
+export interface AutoGrantStatus {
+  /**
+   * Whether the sweep runs.
+   */
+  enabled: boolean;
+  sweepMinutes: SweepMinutes;
+  validitySeconds: GrantValiditySeconds;
+  lastSweep?: AutoGrantSweep;
+}
+/**
+ * What one sweep did.
+ */
+export interface AutoGrantSweep {
+  /**
+   * When the sweep finished.
+   */
+  ranAt: string;
+  /**
+   * Grants issued.
+   */
+  granted: number;
+  /**
+   * Automatic grants revoked. The sweep revokes only grants it issued.
+   */
+  revoked: number;
+  /**
+   * Members the sweep could not decide or act on.
+   */
+  errors: number;
+}
+/**
  * Unencrypted metadata plus the encrypted payload. The KDF and cipher parameters travel in the clear so a reader can decrypt without knowing this specification's defaults.
  */
 export interface BackupEnvelope {
@@ -1617,6 +1741,24 @@ export interface ChunkedDescriptor {
   expectedSha256: ExpectedSha256;
   expectedSizeBytes: ExpectedSizeBytes;
   expiresAt: ExpiresAt;
+}
+/**
+ * OPTIONAL. How the community asks to be shown to a prospective applicant: a name, an accent colour and a logo. Presentation only, self-asserted and unverified — `communityDid` identifies the community, never `branding`. Not part of any criterion, so not covered by a `requirementsDigest`. Every member is optional.
+ */
+export interface CommunityBranding {
+  /**
+   * The community's name as it asks to be shown.
+   */
+  displayName?: string;
+  /**
+   * An sRGB colour as `#rrggbb`, compared case-insensitively. A community SHOULD write it in lower case.
+   */
+  accentColor?: string;
+  /**
+   * An https URL of the community's logo. Fetched by the client, so an untrusted image from wherever it points.
+   */
+  logoUrl?: string;
+  ext?: Ext;
 }
 /**
  * A community profile as a portable export carries it — the mutable profile members plus the immutable identity they belong to.
@@ -1965,6 +2107,12 @@ export interface CredentialReference {
   expiresAt?: string | null;
 }
 /**
+ * A JSON Schema (the W3C `credentialSchema` a credential of this type must conform to), carried as data. Any JSON Schema the community's validator compiles; this specification does not constrain its members. Absent means the type is registered with no schema constraint.
+ */
+export interface CredentialSchema {
+  [k: string]: unknown | undefined;
+}
+/**
  * A W3C Data Integrity proof by the card's publisher. Additional Data Integrity members (e.g. `created`) are permitted and are covered as the cryptosuite defines.
  */
 export interface DataIntegrityProof {
@@ -1979,6 +2127,12 @@ export interface DataIntegrityProof {
   verificationMethod: string;
   proofPurpose: "assertionMethod";
   proofValue: string;
+  [k: string]: unknown | undefined;
+}
+/**
+ * An OpenID for Verifiable Presentations DCQL query, carried verbatim: per-credential `format`, `meta` type selector (`vct_values`) and requested `claims`. Defined by OID4VP and not re-specified here; snake_case member names are DCQL's own. The community parses it as DCQL and checks every type it references against the registry.
+ */
+export interface DcqlQuery {
   [k: string]: unknown | undefined;
 }
 /**
@@ -2855,6 +3009,39 @@ export interface HpkeArmoredEnvelope_VaultV0_2 {
   producerAssertion?: "didSigned" | "attested" | "pinnedOnly";
 }
 /**
+ * Whether the edge is in force now, and if not, why not — the edge's resolved state, which is not the same thing as the event just recorded: restoring an edge whose `validUntil` passed while it was suspended records the restoration and still resolves `expired`. Exactly the members its `state` names are present.
+ */
+export interface InForce {
+  /**
+   * `yes`: inside its window, nothing standing against it. `notYetValid`: its `validFrom` has not arrived. `expired`: its `validUntil` has passed. `suspended`: temporarily ineffective — the only non-`yes` state a lifecycle event can reverse. `superseded`: displaced by a later credential. `withdrawn`: terminal. `indeterminate`: the credential's own window could not be read, so no honest answer is available.
+   */
+  state: "yes" | "notYetValid" | "expired" | "suspended" | "superseded" | "withdrawn" | "indeterminate";
+  /**
+   * Present for `notYetValid`.
+   */
+  validFrom?: string;
+  /**
+   * Present for `expired`.
+   */
+  validUntil?: string;
+  /**
+   * Present for `suspended`: when the standing suspension was recorded.
+   */
+  since?: string;
+  /**
+   * Present for `superseded` and `withdrawn`.
+   */
+  at?: string;
+  /**
+   * Present for `superseded`: the digest of the credential that displaced it.
+   */
+  by?: string;
+  /**
+   * Present for `indeterminate`: why the window could not be read. Written by the community.
+   */
+  reason?: string;
+}
+/**
  * Registry view of one issued Invitation Credential. Carries no credential material — the VIC itself is returned only once, by `issue`.
  */
 export interface InvitationSummary {
@@ -2952,6 +3139,16 @@ export interface IssuedCredentialBase {
    * When the credential's validUntil falls due.
    */
   expiresAt: string;
+}
+/**
+ * Whether this community answers vtc/join-requests/manifest to a caller it cannot identify.
+ */
+export interface JoinDiscovery {
+  /**
+   * True: the manifest is answered to any caller, identified or not — the setting of every community that never chose, because the manifest is a public read by design (an applicant has to know what is asked of them before they disclose anything). False: the manifest is answered only to a caller the community can identify — one with a verified proof or a transport-authenticated sender. Not secrecy: an identified caller is answered either way. False makes the answer attributable, which is what a closed or invite-only community wants rather than a crawler enumerating its criteria.
+   */
+  public: boolean;
+  ext?: Ext;
 }
 /**
  * One application to join a Verifiable Trust Community.
@@ -4216,6 +4413,20 @@ export interface RepoSummary_GitNsV0_3 {
   bootstrap: Bootstrap;
   sync: Sync;
 }
+export interface RequestedAttribute {
+  /**
+   * A claim-type token from the persona claim-type registry (persona/_shared/0.1/CLAIM-TYPES.md) — `name.display`, `address.country` — or an `x:` extension token.
+   */
+  type: string;
+  /**
+   * False for an attribute the applicant may decline. A submission missing a required one is refused with vtc/join-requests/submit:attributesMissing.
+   */
+  required?: boolean;
+  /**
+   * Why the community asks, in words shown to the applicant before they disclose.
+   */
+  purpose?: string;
+}
 /**
  * One held credential a deferred query asked for, and the claims of it that would be disclosed.
  */
@@ -4546,6 +4757,45 @@ export interface RotationRecord {
    */
   cacheHorizonAt?: string;
 }
+/**
+ * One registered credential type, as the community stores it.
+ */
+export interface SchemaEntry {
+  typeUri: CredentialTypeUri;
+  dtgType?: DtgType;
+  credentialSchema?: CredentialSchema;
+  kind: SchemaKind;
+  description?: SchemaDescription;
+  /**
+   * When this entry was last registered. Registering an existing type replaces the entry, so this is the time of the latest registration, not the first.
+   */
+  createdAt: string;
+  /**
+   * The administrator who last registered the entry.
+   */
+  createdByDid: string;
+}
+/**
+ * One registered credential type as a listing reports it: every member of `SchemaEntry` except the `credentialSchema` body, which vtc/schemas/show returns.
+ */
+export interface SchemaSummary {
+  typeUri: CredentialTypeUri;
+  dtgType?: DtgType;
+  kind: SchemaKind;
+  description?: SchemaDescription;
+  /**
+   * Whether the entry carries a `credentialSchema`. True tells a caller that vtc/schemas/show has a body to return.
+   */
+  hasCredentialSchema: boolean;
+  /**
+   * When this entry was last registered.
+   */
+  createdAt: string;
+  /**
+   * The administrator who last registered the entry.
+   */
+  createdByDid: string;
+}
 export interface Builtin_VtaV0_1 {
   type: "builtin";
 }
@@ -4703,7 +4953,7 @@ export interface ServiceState {
 /**
  * A logical authentication context bound to a subject. Producers and consumers exchange Session-shaped data in challenge issuance, authentication responses, and introspection (whoami).
  */
-export interface Session {
+export interface Session_AuthV0_1 {
   /**
    * Opaque, server-chosen session identifier. Stable for the lifetime of the session. Consumers MUST treat the value as opaque; no structure is implied.
    */
@@ -4734,6 +4984,124 @@ export interface Session {
    * Ecosystem-defined extension members per SPEC.md §4.5.1.
    */
   ext?: Ext;
+}
+/**
+ * A logical authentication context bound to a subject. Producers and consumers exchange Session-shaped data in challenge issuance, authentication responses, and introspection (whoami).
+ */
+export interface Session_AuthV0_2 {
+  /**
+   * Opaque, server-chosen session identifier. Stable for the lifetime of the session. Consumers MUST treat the value as opaque; no structure is implied.
+   */
+  id: string;
+  /**
+   * The authenticated party's VID (typically a DID URL).
+   */
+  subject: string;
+  /**
+   * ISO-8601 timestamp when the session was created.
+   */
+  issuedAt: string;
+  /**
+   * ISO-8601 timestamp when the session ceases to be valid. Producers SHOULD refresh before this time; consumers MUST reject after.
+   */
+  expiresAt: string;
+  /**
+   * Authentication Methods References per [RFC 8176]. Typical values: "did" (challenge-response), "passkey" (WebAuthn), "vta" (verifiable-trust agent approval). Multi-factor sessions list every method used.
+   *
+   * @minItems 1
+   */
+  amr?: [string, ...string[]];
+  /**
+   * Authentication Context Class Reference per [OIDC Core §2]. Profiles define their own values; the recommended set is "aal1" (single-factor DID auth), "aal2" (a second possession-or-biometric factor confirmed), and "aal3" (hardware-bound second factor).
+   */
+  acr?: string;
+  /**
+   * The did:key VID bound to this session by auth/authenticate/0.2, when the producer registered one. Present here so introspection (auth/whoami, auth/sessions/list) can show the binding a client already holds; it is descriptive, not an additional grant — the binding, its scope and its lifetime are governed entirely by the auth/authenticate/0.2 specification that established it. Absent when the session was established without a session key, or by a specification version that does not carry one.
+   */
+  sessionKey?: string;
+  /**
+   * Ecosystem-defined extension members per SPEC.md §4.5.1.
+   */
+  ext?: Ext;
+}
+/**
+ * A logical authentication context bound to a subject. Producers and consumers exchange Session-shaped data in challenge issuance, authentication responses, and introspection (whoami).
+ */
+export interface Session_AuthV0_3 {
+  /**
+   * Opaque, server-chosen session identifier. Stable for the lifetime of the session. Consumers MUST treat the value as opaque; no structure is implied.
+   */
+  id: string;
+  /**
+   * The authenticated party's VID (typically a DID URL). For a session established by a proxied login (auth/authenticate/0.3), this is the *principal* being authenticated as — never the delegate that signed the authenticate document; see `actor`.
+   */
+  subject: string;
+  /**
+   * ISO-8601 timestamp when the session was created.
+   */
+  issuedAt: string;
+  /**
+   * ISO-8601 timestamp when the session ceases to be valid. Producers SHOULD refresh before this time; consumers MUST reject after. A consumer honouring `absoluteExpiresAt` MUST NOT advance this value past it, by refresh or any other means.
+   */
+  expiresAt: string;
+  /**
+   * Authentication Methods References per [RFC 8176]. Typical values: "did" (challenge-response), "passkey" (WebAuthn), "vta" (verifiable-trust agent approval). Multi-factor sessions list every method used.
+   *
+   * @minItems 1
+   */
+  amr?: [string, ...string[]];
+  /**
+   * Authentication Context Class Reference per [OIDC Core §2]. Profiles define their own values; the recommended set is "aal1" (single-factor DID auth), "aal2" (a second possession-or-biometric factor confirmed), and "aal3" (hardware-bound second factor).
+   */
+  acr?: string;
+  /**
+   * The did:key VID bound to this session by auth/authenticate/0.2 or 0.3, when the producer registered one. Present here so introspection (auth/whoami, auth/sessions/list) can show the binding a client already holds; it is descriptive, not an additional grant — the binding, its scope and its lifetime are governed entirely by the auth/authenticate specification version that established it. Absent when the session was established without a session key, or by a specification version that does not carry one.
+   */
+  sessionKey?: string;
+  /**
+   * The delegate's VID — the party whose `proof` actually authenticated this session — when this session was established by a *proxied* login (auth/authenticate/0.3, `payload.principal` present and distinct from `issuer`). Absent whenever `subject` authenticated with its own key, including every auth/authenticate/0.1 and /0.2 session and an auth/authenticate/0.3 request where `principal` is absent or equals `issuer`. Carrying `actor` separately from `subject` is what lets an audit trail, a revocation, or a response to a compromised delegate name the true acting party without conflating it with the principal it acted for — see auth/authenticate/0.3 Security & Privacy (Correlation).
+   */
+  actor?: string;
+  /**
+   * The instant beyond which this session's `expiresAt` MUST NOT be advanced, by auth/refresh/0.2 or by any other means — an absolute session lifetime set once at authentication and never moved forward. Consumers that impose no such ceiling beyond the session's own rolling `expiresAt` omit this member; its absence is not itself a claim that the session is unbounded, only that this response does not state a bound. See auth/refresh/0.2 Conformance and Security & Privacy for the enforcement rule.
+   */
+  absoluteExpiresAt?: string;
+  /**
+   * Ecosystem-defined extension members per SPEC.md §4.5.1.
+   */
+  ext?: Ext;
+}
+/**
+ * One signing-key delegation, as its holder sees it. A delegation confers nothing of its own: it names an identity that already holds whatever standing it holds, and a document signed by the key is authorized by that identity's standing read at execution time.
+ */
+export interface SigningKey {
+  signingKeyDid: SigningKeyDid;
+  /**
+   * The identity the key acts for. Included so a holder need not infer it.
+   */
+  identityDid: string;
+  scope: SigningKeyScope;
+  deviceLabel?: DeviceLabel;
+  /**
+   * When the delegation was enrolled.
+   */
+  createdAt: string;
+  /**
+   * When the delegation stops authorizing documents. Always present: the consumer sets it at enrolment and caps it at its own maximum lifetime, whatever the producer asked for, so no delegation outlives the consumer's policy.
+   */
+  expiresAt: string;
+  /**
+   * When the delegation last authorized a document, as far as the consumer recorded. A usability signal for choosing which key to revoke, recorded best-effort; its absence does not mean the key was never used.
+   */
+  lastUsedAt?: string;
+  /**
+   * When the delegation was revoked. A revoked delegation authorizes nothing and its key cannot be enrolled again.
+   */
+  revokedAt?: string;
+  /**
+   * Whether the delegation authorizes documents right now: not revoked and not past `expiresAt`. Computed by the consumer with the predicate its verifier applies, so a holder does not re-implement it and disagree.
+   */
+  active: boolean;
 }
 export interface WebOrigin_VaultV0_1 {
   kind: "web-origin";
@@ -5004,6 +5372,14 @@ export interface TspMessageEnvelope_VaultV0_2 {
    * Base64url-encoded TSP message bytes. Format reference: https://trustoverip.github.io/tswg-tsp-specification/#message-format
    */
   message: string;
+}
+/**
+ * What the uploaded bytes are for, committed before any byte moves. `file`: one file at `path`, written into the site when the upload commits — the single-file write. `bundle`: a gzip-compressed tar of the whole site, staged when the upload commits and published by vtc/website/deploy. `path` is required for a `file` target and forbidden for a `bundle`, and `ifMatch` is allowed only for a `file` — rules over two members that this schema does not express; a community refuses a violation with `malformedRequest`. `ifMatch` is optimistic concurrency: the write commits only if the file's current content hash is this value.
+ */
+export interface UploadTarget {
+  kind: "file" | "bundle";
+  path?: WebsitePath;
+  ifMatch?: WebsiteEtag;
 }
 export interface VaultDeletedEvent_SyncV0_1 {
   kind: "vault.deleted";
@@ -5448,6 +5824,87 @@ export interface VettingCardClaim {
    * Where the value's assurance comes from. `selfAsserted` — the applicant says so, and the vetter's human check is the only assurance added — is the only value this version defines; a verifier MUST NOT treat any other value as adding assurance it does not understand.
    */
   provenance: string;
+}
+/**
+ * What identity-vetting evidence a criterion needs, beyond what a presentation-definition can express: distinct eligible vetters, per-method floors, independence caps. Every number is the community's own policy. This schema supplies no defaults — an absent optional member means the community imposes no constraint of that kind, never that some protocol value applies. Deliberately open: a consumer MUST ignore members it does not recognise, so a community publishing a newer shape does not make an older client unable to read the rest. Durations: `maxStatementAge` — a statement older than this at decision time does not count (absent: no limit beyond the statement's own validity); `decisionSla` — how long after submission the community undertakes to decide, including on a referred application; `requirementsGrace` — how long an application started under an earlier `requirementsDigest` is still evaluated under that version.
+ */
+export interface VettingRequirements {
+  /**
+   * Version of this requirements object's shape. `0.1` for the members defined here.
+   */
+  version: string;
+  /**
+   * The endorsement type URI a counted vetting statement carries as `credentialSubject.endorsement.type`, as registered with the community via vtc/endorsement-types/register.
+   */
+  statementType: string;
+  /**
+   * How many counted statements are needed, counting each vetter once however many DIDs they hold.
+   */
+  minStatements: number;
+  /**
+   * Per-method floors within `minStatements` — e.g. `{ "inPerson": 1 }`. Every method named MUST also be in `acceptedMethods`. Absent: no method floor.
+   */
+  minByMethod?: {
+    [k: string]: number | undefined;
+  };
+  /**
+   * Methods whose statements count at all.
+   *
+   * @minItems 1
+   */
+  acceptedMethods: [VettingMethod, ...VettingMethod[]];
+  /**
+   * Documentation a statement must have relied on in order to count. Absent — the expected case — means each vetter decides what documentation they accept, including none for prior acquaintance, and the community counts what they attest.
+   *
+   * @minItems 1
+   */
+  acceptedDocumentClasses?: [VettingDocumentation, ...VettingDocumentation[]];
+  /**
+   * Claim types the applicant's Vetting Card must carry, which the identity commitment is computed over, and which a counted statement must list as verified. Absent: none.
+   */
+  requiredClaims?: ClaimType[];
+  /**
+   * Claim types an applicant MAY add to the card and a vetter MAY verify. They never affect whether a statement counts.
+   */
+  optionalClaims?: ClaimType[];
+  maxStatementAge?: Duration;
+  /**
+   * How a vetter's eligibility is established.
+   */
+  eligibleVetters: {
+    /**
+     * The role named in a community-issued `CommunityRole` endorsement credential (see `vtc/vetting/vetters/grant/0.1`). A statement counts only if its issuer holds that credential.
+     */
+    role: string;
+  };
+  /**
+   * Caps on how much evidence may come from people close to the applicant. Absent: no caps.
+   */
+  independence?: {
+    /**
+     * The most counted statements that may come from vetters declaring each relationship — e.g. `{ "family": 0 }`.
+     */
+    maxByDeclaredRelationship?: {
+      [k: string]: number | undefined;
+    };
+    /**
+     * When true, every counted statement must carry the same identity commitment — all vetters verified the same claimed identity. Absent: false.
+     */
+    requireConsistentIdentityCommitment?: boolean;
+  };
+  /**
+   * Whether an invitation credential must accompany the statements at submission (`required`), may (`optional`), or plays no part (`none`). Absent: the presentation-definition alone governs.
+   */
+  invitation?: "required" | "optional" | "none";
+  decisionSla?: Duration;
+  requirementsGrace?: Duration;
+  /**
+   * Where the community's vetting governance — including the attestation text vetters sign — is published.
+   */
+  governanceFrameworkUrl?: string;
+  ext?: Ext;
+  extCritical?: ExtCritical;
+  [k: string]: unknown | undefined;
 }
 /**
  * An opaque, gateway-issued reference to a device's push channel (push wake-up binding, https://trusttasks.org/binding/push/0.1). The push gateway returns it to the device at registration; the device conveys it to its VTA (device/set-wake), and the VTA provisions it to authorized triggers (its mediator and/or itself). The raw platform push token (APNs/FCM/WebPush) is held ONLY by the gateway and is never represented here — the handle abstracts the platform, so adding new push methods (e.g. PWA Web Push) needs no change to triggers or VTA config. A handle is a bearer capability to *request* a wake (subject to the gateway's allowlist), never to read the channel.
