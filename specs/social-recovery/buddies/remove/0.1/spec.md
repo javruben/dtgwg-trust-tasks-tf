@@ -64,7 +64,7 @@ related:
 The **Social Recovery — Remove Buddy** Trust Task withdraws one
 previously enrolled recovery buddy's standing custodial authority. It is
 the reverse of
-[`social-recovery/buddies/add`](../add/0.1/spec.md), and the reference
+[`social-recovery/buddies/add`](../../add/0.1/spec.md), and the reference
 implementation frames its risk asymmetrically from enrolment: adding a
 buddy is `riskLevel: "critical"` (a wrong addition plants an attacker's
 own recovery path ahead of a device takeover, per `buddies/add`'s own
@@ -99,6 +99,11 @@ requirements stated here.
 ## Definitions
 
 - **`recoveryBuddyDid`** — REQUIRED, the DID of the buddy to remove.
+- **`keyId`** — returned in the response: the maintainer's own internal
+  identifier for the enrolment key record that was removed (the same value
+  `social-recovery/buddies/add`'s response returns at enrolment time).
+- **`seq`** — returned in the response: the chain-commit sequence number of
+  the `guardian.removed` event this removal produced.
 
 ## Request
 
@@ -123,7 +128,7 @@ The device owner names the buddy to remove. The top-level schema is in
 
 ## Response
 
-The maintainer confirms the buddy is removed and the current roster count. The
+The maintainer confirms the buddy is removed. The
 response shape below is normative prose: `payload.schema.json` governs the
 REQUEST only and carries no response sub-schema. Failures are `trust-task-error`
 documents.
@@ -140,7 +145,8 @@ documents.
   "threadId": "urn:uuid:00000000-0000-4000-8000-0000000007ff",
   "payload": {
     "recoveryBuddyDid": "did:example:estranged-former-partner",
-    "remainingBuddyCount": 1
+    "keyId": "g-key-estranged-former-partner",
+    "seq": 12
   }
 }
 ```
@@ -149,8 +155,16 @@ documents.
 
 ### Data carried
 
-The request and response carry only the buddy's identifier and the
-remaining roster count — never key material.
+The request carries only the buddy's identifier. The response echoes that
+identifier together with the maintainer's own internal `keyId` for the
+enrolment record that was removed and the `seq` (chain-commit sequence
+number) the removal produced — never key material, and never a roster
+count: the reference implementation does not compute or return one on this
+operation, so a client needing the post-removal count MUST call
+[`social-recovery/buddies/list`](../../../buddies/list/0.1/spec.md). A
+previous revision of this section named a "remaining roster count" as part
+of the response. **That was incorrect** and is corrected here rather than
+removed silently, because a reader who saw it may have relied on it.
 
 ### Correlation
 

@@ -47,11 +47,15 @@ exposure:
   discloses: metadata
   actsAsSubject: false
   rationale: >-
-    The request and response identify the buddy and the relationship
+    The request identifies the buddy, carries the relationship
     parameters (how many buddies are required to cooperate for a recovery
-    to succeed, if the scheme is threshold-based), never key material
-    itself. See Correlation below for why this metadata is not therefore
-    low-stakes.
+    to succeed, if the scheme is threshold-based), and carries the
+    buddy's **public** Ed25519 key (`recoveryBuddyPublicKeyHex`,
+    REQUIRED); the response echoes the identifier and the key record
+    created. This task is deliberately NOT key-material-free — see Data
+    carried — but no private key and no share of any secret is carried in
+    either direction. See Correlation below for why this metadata is not
+    therefore low-stakes.
 errorCodes:
   - code: social-recovery/buddies/add:buddyAlreadyEnrolled
     meaning: >-

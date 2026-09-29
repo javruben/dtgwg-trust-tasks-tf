@@ -35,9 +35,15 @@ exposure:
   discloses: metadata
   actsAsSubject: false
   rationale: >-
-    Returns each enrolled buddy's identifying fields (DID, display label) —
-    never key material, never the reconstruction mechanism's own internal
-    state.
+    Returns each enrolled buddy's identifying fields (DID, display label,
+    enrolment timestamp) and the buddy's **public** Ed25519 key
+    (`publicKeyHex`) — the same public key `social-recovery/buddies/add`
+    accepted at enrolment, disclosed deliberately so a recipient can later
+    verify a buddy's cooperation, never a private key or secret share.
+    Also returns two roster-level device-topology fields
+    (`activeDeviceCount`, `canBootstrap`) unrelated to any individual
+    buddy. Never the reconstruction mechanism's own internal state (e.g.
+    threshold-share material, if used).
 errorCodes:
   - code: social-recovery/buddies/list:noIdentityChain
     meaning: >-
@@ -90,9 +96,29 @@ requirements stated here.
 
 - **Recovery buddy roster** — every currently enrolled custodial recovery
   contact for the requesting owner's identity, as recorded via
-  [`social-recovery/buddies/add`](../add/0.1/spec.md). This task takes no
+  [`social-recovery/buddies/add`](../../add/0.1/spec.md). This task takes no
   arguments; there is no per-device or per-buddy filter to narrow the
   result.
+- **`recoveryBuddies[]`** — the roster array itself, one entry per currently
+  enrolled buddy. Each entry carries:
+  - **`recoveryBuddyDid`** — the buddy's `did:*`.
+  - **`keyId`** — the maintainer's own internal identifier for the buddy's
+    enrolment key record (opaque to the wire; not itself key material).
+  - **`publicKeyHex`** — the buddy's Ed25519 **public** key, 64 hex
+    characters, the same value supplied on
+    [`social-recovery/buddies/add`](../../add/0.1/spec.md)'s
+    `recoveryBuddyPublicKeyHex`. It is a public key, disclosed deliberately —
+    see Security & Privacy below.
+  - **`addedAtIso`** — ISO-8601 timestamp of enrolment, or `null` if the
+    maintainer did not record one.
+  - **`name`** — the display label supplied at enrolment, or `null`.
+  - **`bootstrap`** — `true` when the buddy was enrolled through the
+    single-device bootstrap path (the only path this milestone supports);
+    reserved for the multi-device FROST co-signing path.
+- **`activeDeviceCount`** — the number of currently active devices on the
+  requesting owner's identity chain.
+- **`canBootstrap`** — `true` iff `activeDeviceCount <= 1`; whether the
+  bootstrap (single-device) enrolment/removal path is currently available.
 
 ## Request
 
@@ -130,9 +156,18 @@ sub-schema. Failures are `trust-task-error` documents.
   "issuedAt": "2026-01-01T00:00:01Z",
   "threadId": "urn:uuid:00000000-0000-4000-8000-0000000006ff",
   "payload": {
-    "buddies": [
-      { "recoveryBuddyDid": "did:example:sister", "name": "My sister" }
-    ]
+    "recoveryBuddies": [
+      {
+        "recoveryBuddyDid": "did:example:sister",
+        "keyId": "g-key-example:sister",
+        "publicKeyHex": "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c",
+        "addedAtIso": "2026-01-01T00:00:00Z",
+        "name": "My sister",
+        "bootstrap": true
+      }
+    ],
+    "activeDeviceCount": 1,
+    "canBootstrap": true
   }
 }
 ```
@@ -141,14 +176,25 @@ sub-schema. Failures are `trust-task-error` documents.
 
 ### Data carried
 
-The response carries each enrolled buddy's DID and optional display
-label — never a public key, never any material relevant to how a future
-recovery event would actually be executed.
+The response carries, for each enrolled buddy: their DID, a key
+identifier, **their recovery public key as hex**, the enrolment timestamp, an
+optional display label, and whether they are a bootstrap buddy. It also carries
+the responder's active device count and whether bootstrap is still available.
+
+A previous revision of this section stated that the response carries "never a
+public key". **That was false**: the implementation this specification documents
+returns `publicKeyHex` for every enrolled buddy. The sentence is corrected here
+rather than removed, because a reader who saw it may have relied on it.
+
+The public key is enrolment material, not recovery-execution material: it
+identifies the key a buddy would sign with, and does not by itself advance or
+authorise a recovery. No share, no threshold parameter and no reconstruction
+input is carried.
 
 ### Correlation
 
 **This is the same substantive concern
-[`social-recovery/buddies/add`](../add/0.1/spec.md)'s Correlation section
+[`social-recovery/buddies/add`](../../add/0.1/spec.md)'s Correlation section
 names, restated for this read**: the roster is a durable, sensitive
 social-graph fact — who the owner trusts to hold recovery authority over
 their digital access. A maintainer **MUST NOT** expose one owner's roster

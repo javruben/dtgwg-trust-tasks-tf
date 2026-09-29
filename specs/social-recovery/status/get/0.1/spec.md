@@ -34,8 +34,12 @@ exposure:
   actsAsSubject: false
   rationale: >-
     The response discloses whether this specific device currently needs
-    recovery-buddy-assisted recovery to rejoin the identity — a device
-    health fact, not the recovery-buddy roster itself (that is
+    recovery-buddy-assisted recovery, the machine-readable reason, the
+    identity's other active device DIDs, and — when applicable — the
+    most recent handoff event's own record (commit id/sequence, the
+    retired device's DID, its nonce, and its buddy-proof count). All of
+    this is device-topology metadata about the requesting owner's own
+    identity, not the recovery-buddy roster itself (that is
     `social-recovery/buddies/list`) and not any key material.
 errorCodes:
   - code: social-recovery/status/get:deviceNotFound
@@ -52,7 +56,7 @@ related:
 The **Social Recovery — Status** Trust Task answers one narrow question:
 does this specific device currently need recovery-buddy-assisted recovery
 to rejoin the identity? It is a per-device health read, distinct from
-[`social-recovery/buddies/list`](../../buddies/list/0.1/spec.md), which
+[`social-recovery/buddies/list`](../../../buddies/list/0.1/spec.md), which
 answers a different question (who is enrolled as a recovery buddy for this
 identity at all) — a device can need recovery whether or not any buddies
 are currently enrolled to help with it, and this task reports only the
@@ -82,13 +86,43 @@ requirements stated here.
 
 ## Definitions
 
-- **`localDeviceDid`** — REQUIRED, the querying device's own DID. This
-  task reports on this specific device's own recovery health, not on the
-  identity's devices in aggregate.
+- **`localDeviceDid`** — REQUIRED on the request, the querying device's own
+  DID. **Not echoed on the response** — the reference implementation's
+  `respond()` never includes it (confirmed at both response sites,
+  `device-recovery-status.ts:74-82` and `:91-98`); a consumer MUST NOT rely
+  on receiving it back and MUST correlate response to request via
+  `threadId`.
 - **Recovery health** — whether this device, right now, is in a state
   where it would need buddy-assisted recovery to rejoin the identity
   (e.g. it has lost its own key material or standing), as distinct from a
   device that is functioning normally and has no such need.
+- **`needed`** — REQUIRED on the response, boolean. Whether this device,
+  right now, needs buddy-assisted recovery to rejoin the identity.
+- **`reason`** — REQUIRED on the response. A machine-readable reason code
+  for the `needed` value. The reference implementation emits:
+  - `"no_identity_chain"` — no active identity chain exists yet on this
+    daemon; `needed` is `false`.
+  - `"no_handoff_event"` — no `identity.handed_off` event exists on the
+    chain; `needed` is `false`.
+  - `"local_device_active"` — this device already appears among the
+    identity's active devices; `needed` is `false`.
+  - `"no_active_devices_after_handoff"` — a handoff occurred and no device
+    is currently active; `needed` is `true`.
+  - `"recovery_required"` — a handoff occurred, this device is not the
+    active one, and another device is; `needed` is `true`.
+- **`latestHandoff`** — the most recent `identity.handed_off` event found,
+  or `null` when `reason` is `"no_identity_chain"` or `"no_handoff_event"`.
+  When present, an object with:
+  - **`commitId`** — the chain commit's own id.
+  - **`sequence`** — the chain commit's sequence number.
+  - **`retiringDeviceDid`** — the DID of the device the handoff retired.
+  - **`handoffNonce`** — the handoff's nonce (hex, at least 32 characters).
+  - **`recoveryBuddyProofCount`** — the number of buddy proofs embedded in
+    the handoff event.
+- **`activeDeviceDids`** — the identity chain's currently active device
+  DIDs, as an array. May be empty.
+- **`localIsActive`** — whether `localDeviceDid` appears in
+  `activeDeviceDids`.
 
 ## Request
 
@@ -128,18 +162,36 @@ and carries no response sub-schema. Failures are `trust-task-error` documents.
   "issuedAt": "2026-01-01T00:00:01Z",
   "threadId": "urn:uuid:00000000-0000-4000-8000-0000000005ff",
   "payload": {
-    "localDeviceDid": "did:example:device-a1b2",
-    "needsRecovery": false
+    "needed": false,
+    "reason": "no_handoff_event",
+    "latestHandoff": null,
+    "activeDeviceDids": ["did:example:device-a1b2"],
+    "localIsActive": true
   }
 }
 ```
+
+Note `localDeviceDid` is **not** echoed in the response payload; the
+reference implementation never returns it (see Definitions).
 
 ## Security & Privacy
 
 ### Data carried
 
-The request carries only a device identifier. The response carries a
-single recovery-need flag — no key material, no buddy roster.
+The request carries only a device identifier, which is **not** echoed
+back. The response carries a `needed` flag, a machine-readable `reason`
+code, the identity's currently active device DIDs (`activeDeviceDids`),
+whether the querying device is among them (`localIsActive`), and — when a
+handoff has occurred — the most recent handoff event's own record
+(`latestHandoff`: its chain-commit id and sequence, the DID of the device
+it retired, its nonce, and how many buddy proofs it embedded). A previous
+revision of this section said the response carries "a single recovery-need
+flag"; **that understated what is disclosed** and is corrected here rather
+than removed. No recovery buddy's identity or public key is carried (that
+is [`social-recovery/buddies/list`](../../../buddies/list/0.1/spec.md)), and
+no private key or secret share is carried. `activeDeviceDids` and
+`retiringDeviceDid` name only devices belonging to the same owner's own
+identity, never a recovery buddy or any third party.
 
 ### Correlation
 
